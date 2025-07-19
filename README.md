@@ -18,6 +18,7 @@ Easily jot down personal notes on your anime library! This plugin adds quick-acc
 
    * 🔘 An anime page and click **“📝 Add/Edit Note”**, or
    * 📚 Your library → right-click an anime card → select **“📝 Add/Edit Note”** from the context menu.
+   * 🔔 Or click the tray icon while on an anime page to open notes for that anime directly 
 3. Write your note and press **📂 Save**.
 4. To discard changes, press **❌ Cancel**.
 
