@@ -85,13 +85,13 @@ function init() {
             label: "📝 Add/Edit Note",
             intent: "primary"
         });
+
         animePageButton.onClick(handleButtonPress);
 
         const animePageDropdown = ctx.action.newAnimePageDropdownItem({
             label: "📝 Notes"
         });
 
-        animePageDropdown.mount();
         animePageDropdown.onClick(handleButtonPress);
 
         const mediaCardEntry = ctx.action.newMediaCardContextMenuItem({
@@ -99,6 +99,7 @@ function init() {
             for: "anime"
         });
 
+        mediaCardEntry.mount();
         mediaCardEntry.onClick(handleButtonPress);
 
         ctx.screen.onNavigate((e) => {
