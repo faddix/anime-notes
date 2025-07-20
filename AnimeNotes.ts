@@ -13,7 +13,36 @@ function init() {
             iconUrl: "https://raw.githubusercontent.com/faddix/anime-notes/main/src/notepad.png",
             withContent: true
         });
-        
+
+        function updateTray(anime : $app.AL_BaseAnime) {
+            currentMediaId.set(anime.id);
+            titleFieldRef.setValue(`✏️ Notes for: 📺 ${anime.title?.userPreferred}`);
+            
+            const notes = $storage.get(STORAGE_KEY) || {};
+            const existingNote = notes[anime.id];
+            noteFieldRef.setValue(existingNote || '');
+            tray.open();
+        };
+
+        const handleButtonPress = (event) => {
+            const anime = event.media;
+            currentMediaId.set(anime.id);
+            updateTray(anime);
+        }
+
+        async function getCurrentAnime(): Promise<$app.AL_BaseAnime | undefined> {
+            return (await ctx.anime.getAnimeEntry(currentMediaId.get() || 0)).media;
+        }
+
+        async function getWidth() {
+            const body = await ctx.dom.queryOne('body');
+            if (body) {
+                const width = await body.getComputedStyle('width');
+                return width;
+            }
+            return null;
+        };
+
         tray.render(() => {
             if (!currentMediaId.get())
                 return tray.text("✏️ Click on an anime to add/edit notes 📋");
@@ -31,25 +60,6 @@ function init() {
                 })
             ];
         });
-
-        function updateTray(anime : $app.AL_BaseAnime) {
-            currentMediaId.set(anime.id);
-            titleFieldRef.setValue(`✏️ Notes for: 📺 ${anime.title?.userPreferred}`);
-            
-            const notes = $storage.get(STORAGE_KEY) || {};
-            const existingNote = notes[anime.id];
-            noteFieldRef.setValue(existingNote || '');
-            tray.open();
-        };
-
-        async function getCurrentAnime(): Promise<$app.AL_BaseAnime | undefined> {
-            return (await ctx.anime.getAnimeEntry(currentMediaId.get() || 0)).media;
-        }
-        const handleButtonPress = (event) => {
-            const anime = event.media;
-            currentMediaId.set(anime.id);
-            updateTray(anime);
-        }
 
         tray.onClick(() => {
             getCurrentAnime().then(anime => {
@@ -75,16 +85,20 @@ function init() {
             label: "📝 Add/Edit Note",
             intent: "primary"
         });
-
-        animePageButton.mount();
         animePageButton.onClick(handleButtonPress);
+
+        const animePageDropdown = ctx.action.newAnimePageDropdownItem({
+            label: "📝 Notes"
+        });
+
+        animePageDropdown.mount();
+        animePageDropdown.onClick(handleButtonPress);
 
         const mediaCardEntry = ctx.action.newMediaCardContextMenuItem({
             label: "📝 Add/Edit Note",
             for: "anime"
         });
 
-        mediaCardEntry.mount();
         mediaCardEntry.onClick(handleButtonPress);
 
         ctx.screen.onNavigate((e) => {
@@ -93,9 +107,19 @@ function init() {
                 if (currentMediaId.get() !== id) {
                     currentMediaId.set(id);
                 }
-            } else {
-                currentMediaId.set(null);
-            }
+            } else currentMediaId.set(null);
+            
+            getWidth().then((width) => {
+                if (!width) return;
+
+                if (parseInt(width) > 526) {
+                    animePageButton.mount();
+                    animePageDropdown.unmount();
+                } else {
+                    animePageButton.unmount();
+                    animePageDropdown.mount();
+                }
+            });
         });
         ctx.screen.loadCurrent();
     });
