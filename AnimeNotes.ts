@@ -92,7 +92,11 @@ function init() {
             label: "📝 Notes"
         });
 
-        animePageDropdown.onClick(handleButtonPress);
+        animePageDropdown.onClick((event) => {
+            ctx.setTimeout(() => {
+                handleButtonPress(event);
+            }, 400);
+        });
 
         const mediaCardEntry = ctx.action.newMediaCardContextMenuItem({
             label: "📝 Add/Edit Note",
