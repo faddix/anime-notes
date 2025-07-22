@@ -19,11 +19,7 @@ Easily jot down personal notes on your anime library! This plugin adds quick-acc
    * 📚 Your library → right-click an anime card → select **“📝 Add/Edit Note”** from the context menul;
    * 🔔 Click the tray icon while on an anime page to open notes for that anime directly.
 3. Write your note and press **📂 Save**.
-4. To discard changes, press **❌ Cancel**.
-
----
-
-Yes, that wording is clear and helpful! Here's a slightly refined version with improved flow and clarity:
+4. To discard changes, click outside the tray
 
 ---
 
@@ -53,17 +49,7 @@ All your notes are stored **locally** in your browser using `$storage` under the
 
 ## ⌨️ Development Notes
 
-To run or modify this plugin locally:
-
-```ts
-/// <reference path="./plugin.d.ts" />
-/// <reference path="./system.d.ts" />
-/// <reference path="./app.d.ts" />
-
-// Entry point: function init() { ... }
-```
-
-Refer to the [Seanime plugin development guide](https://seanime.gitbook.io/seanime-extensions/plugins/introduction) for setup and deployment.
+To run or modify this plugin locally for development, clone the repository and refer to the [Seanime plugin development guide](https://seanime.gitbook.io/seanime-extensions/plugins/introduction) for setup and deployment.
 
 ---
 

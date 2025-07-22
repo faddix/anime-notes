@@ -24,7 +24,7 @@ function init() {
             tray.open();
         };
 
-        const handleButtonPress = (event) => {
+        const handleButtonPress = (event: any) => {
             const anime = event.media;
             currentMediaId.set(anime.id);
             updateTray(anime);
@@ -46,19 +46,23 @@ function init() {
         tray.render(() => {
             if (!currentMediaId.get())
                 return tray.text("✏️ Click on an anime to add/edit notes 📋");
-            return [
-                tray.input({
-                    label: titleFieldRef.current,
-                    fieldRef: noteFieldRef
-                }),
-                tray.button("💾 Save", {
-                    intent: "primary",
-                    onClick: "save"
-                }),
-                tray.button("❌ Cancel", {
-                    onClick: "cancel"
-                })
-            ];
+            return tray.stack({
+                items: [
+                    tray.input({
+                        label: titleFieldRef.current,
+                        fieldRef: noteFieldRef,
+                        textarea: true
+                    }),
+                    tray.button("💾 Save", {
+                        intent: "primary",
+                        onClick: "save"
+                    }),
+                    // TODO: uncomment when the tray.close() bug is fixed
+                    // tray.button("❌ Cancel", {
+                    //     onClick: "cancel"
+                    // })
+                ]
+            });
         });
 
         tray.onClick(() => {
@@ -73,7 +77,6 @@ function init() {
                 notes[currentMediaId.get() || 0] = noteFieldRef.current;
                 $storage.set(STORAGE_KEY, notes);
                 ctx.toast.success("✨ Note saved successfully!");
-                tray.close();
             }
         });
 
