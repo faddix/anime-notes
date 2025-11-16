@@ -1,13 +1,13 @@
 {
     "id": "anime-notes",
     "name": "Anime Notes",
-    "version": "1.1.8",
+    "version": "2.0.0",
     "semverConstraint": ">=2.9.3",
     "manifestURI": "https://raw.githubusercontent.com/faddix/anime-notes/main/anime-notes.json",
     "language": "typescript",
     "type": "plugin",
     "description": "✏️ Add personal notes to anime.",
-    "author": "Faddix",
+    "author": "Faddix, Bas1874",
     "icon": "https://raw.githubusercontent.com/faddix/anime-notes/main/src/notepad.png",
     "website": "https://github.com/faddix/anime-notes",
     "lang": "multi",
@@ -15,8 +15,39 @@
     "plugin": {
         "version": "1",
         "permissions": {
-            "scopes": ["storage"]
+            "scopes": [
+                "storage",
+                "anilist",
+                "anilist-token",
+                "database"
+            ]
         }
+    },
+    "userConfig": {
+        "requiresConfig": true,
+        "version": 2,
+        "fields": [
+            {
+                "name": "mode",
+                "label": "Storage Mode",
+                "type": "select",
+                "default": "dual-view",
+                "options": [
+                    {
+                        "label": "Local only",
+                        "value": "local-only"
+                    },
+                    {
+                        "label": "AniList only",
+                        "value": "anilist-only"
+                    },
+                    {
+                        "label": "Local & AniList",
+                        "value": "dual-view"
+                    }
+                ]
+            }
+        ]
     },
     "isDevelopment": false
 }
