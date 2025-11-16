@@ -1,7 +1,7 @@
 {
     "id": "anime-notes",
     "name": "Anime Notes",
-    "version": "2.0.0",
+    "version": "2.0.2",
     "semverConstraint": ">=2.9.3",
     "manifestURI": "https://raw.githubusercontent.com/faddix/anime-notes/main/anime-notes.json",
     "language": "typescript",

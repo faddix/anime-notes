@@ -55,6 +55,11 @@ function init() {
             return IS_ANILIST_ONLY || (ENABLE_VIEW_MODE_TOGGLE && viewMode.get() === "anilist");
         }
 
+        function isCustomSource(mId: number | null | undefined): boolean {
+            if (!mId) return false;
+            return mId >= 2**31;
+        }
+
         async function buildNotesArray(data: Record<number, any>, sourceType: 'local' | 'anilist'): Promise<Note[]> {
             const notes: Note[] = [];
 
@@ -158,6 +163,11 @@ function init() {
         // =====================
 
         async function fetchAniListNote(mediaId: number): Promise<string | null> {
+            // Skip custom source IDs that can break the plugin
+            if (isCustomSource(mediaId)) {
+                return null;
+            }
+
             const token = $database.anilist.getToken();
             if (!token) {
                 ctx.toast.error("⚠️ No AniList token found — notes won't be pushed.");
@@ -180,6 +190,12 @@ function init() {
         }
 
         async function saveAniListNote(mediaId: number, note: string) {
+            // Skip custom source IDs that can break the plugin
+            if (isCustomSource(mediaId)) {
+                ctx.toast.warning("⚠️ Notes cannot be saved to AniList for custom source entries.");
+                return;
+            }
+
             const token = $database.anilist.getToken();
             if (!token) {
                 ctx.toast.error("⚠️ No AniList token found — notes won't be pushed.");
@@ -202,6 +218,12 @@ function init() {
         }
 
         async function deleteAniListNote(mediaId: number) {
+            // Skip custom source IDs that can break the plugin
+            if (isCustomSource(mediaId)) {
+                ctx.toast.warning("⚠️ Notes cannot be deleted from AniList for custom source entries.");
+                return;
+            }
+
             const token = $database.anilist.getToken();
             if (!token) {
                 ctx.toast.error("⚠️ No AniList token found — notes won't be pushed.");
@@ -250,7 +272,7 @@ function init() {
                     for (const entry of list.entries) {
                         const mediaId = entry.media.id;
                         const notes = entry.notes;
-                        if (mediaId && notes !== undefined && notes !== null) {
+                        if (mediaId && notes !== undefined && notes !== null && !isCustomSource(mediaId)) {
                             aniListNotesMap[mediaId] = notes === '""' ? "" : notes;
                         }
                     }
